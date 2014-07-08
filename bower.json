@@ -16,6 +16,9 @@
   ],
   "dependencies": {
     "angular": "~1.2.19",
-    "angular-route": "~1.2.19"
+    "angular-route": "~1.2.19",
+    "angular-mocks": "~1.2.19",
+    "jasmine": "~2.0.0",
+    "karma": "~0.2.2"
   }
 }

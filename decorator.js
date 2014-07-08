@@ -4,18 +4,35 @@ angular.module('ngHintEvent',[])
       var original = $delegate[0].compile;
       var falseBinds = [];
       $delegate[0].compile = function(element, attrs, transclude) {
-        var ngEventDirs = eeLib.getEventDirectives();
-        for(var attr in attrs.$attr){
-          //attr = eeLib.camelToDashes(attr);
-          var boundFunc = attrs[attr];
-          if(ngEventDirs[attr] && !isDefinedFunction(boundFunc)) { // if the attr is an ngEvent attr && if its bound function does NOT exsists
-            var toPush = {element:element, attribute: attr, boundFunc: boundFunc};
-            falseBinds.push(toPush); //keep track of element, attr, and function name
+        return function ngEventHandler(scope, element, attrs) {
+          var ngEventDirs = eeLib.getEventDirectives(), boundFunc;
+          for(var attr in attrs.$attr) {
+            boundFunc = attrs[attr].substring(0,attrs[attr].indexOf('('));
+            if(ngEventDirs[attr] && !scope[boundFunc]) {
+              var id = (element[0].id) ? ' with id: #'+element[0].id : '';
+              var type = element[0].nodeName;
+              var message = 'Function "'+boundFunc+'" called on '+type+' element'+id+' does not '+
+              'exist in that scope.';
+              console.groupCollapsed(message);
+              console.log(element[0]);
+              console.log(scope);
+              console.groupEnd();
+            }
           }
-        }
-        return original(element, attrs, transclude);
+          element.on(name.substring(2).toLowerCase(), function(event) {
+            scope.$apply(function() {
+              fn(scope, {$event:event});
+            });
+          });
+        };
       };
-      //check if boundFUnction is anything
       return $delegate;
     })
+    var ngEventCheck = function() {
+      eeLib.getEventDirectives().forEach(function(name) {
+        eeLib.ngEventDirectives[name] = ['$parse', function($parse) {
+
+        }]
+      });
+    }
   }]);
