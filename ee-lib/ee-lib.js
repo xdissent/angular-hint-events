@@ -81,13 +81,24 @@ eeLib.getSuggestion = function (original, props) {
   var min_levDist = Infinity, closestMatch = '';
   for(var i in props) {
     prop = props[i];
-    if(Math.abs(original.length-prop.length) < 3) {
+    if(eeLib.areSimilarEnough(original,prop)) {
       var currentlevDist = eeLib.levenshteinDistance(original, prop);
       var closestMatch = (currentlevDist < min_levDist)? prop : closestMatch;
       var min_levDist = (currentlevDist < min_levDist)? currentlevDist : min_levDist;
     }
   }
   return closestMatch;
+}
+eeLib.areSimilarEnough = function(s,t) {
+  var strMap = {}, similarities = 0, STRICTNESS = .66;
+  if(Math.abs(s.length-t.length) > 3) {
+    return false;
+  }
+  s.split('').forEach(function(x){strMap[x] = x});
+  for (var i = t.length - 1; i >= 0; i--) {
+    similarities = strMap[t.charAt(i)] ? similarities + 1 : similarities;
+  };
+  return similarities >= t.length * STRICTNESS;
 }
 eeLib.levenshteinDistance = function(s, t) {
     if(typeof s !== 'string' || typeof t !== 'string') {
