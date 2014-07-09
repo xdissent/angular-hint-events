@@ -11,9 +11,8 @@ angular.module('ngHintEvent',[])
             var eventAttrName = eeLib.getEventAttr(attrs.$attr);
             var fn = $parse(attrs[eventAttrName]);
             return function ngEventHandler(scope, element, attrs) {
-              var ngEventDirs = eeLib.getEventDirectives(), boundFunc;
               for(var attr in attrs.$attr) {
-                boundFuncs = eeLib.getFunctionNames(attrs[attr]);
+                var boundFuncs = eeLib.getFunctionNames(attrs[attr]);
                 boundFuncs.forEach(function(boundFn) {
                   if(ngEventDirs[attr] && !scope[boundFn]) {
                     messages.push({
@@ -26,10 +25,10 @@ angular.module('ngHintEvent',[])
                 });
               }
               element.on(eventAttrName.substring(2).toLowerCase(), function(event) {
-              scope.$apply(function() {
-                fn(scope, {$event:event});
+                scope.$apply(function() {
+                  fn(scope, {$event:event});
+                });
               });
-            });
             };
           };
           return $delegate;
