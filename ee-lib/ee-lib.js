@@ -12,10 +12,7 @@ eeLib.getEventDirectives = function() {
   eeLib.ngEventDirectives = eventDirHash;
   return eventDirHash;
 };
-eeLib.camelToDashes = function(str) {
-  return str.replace(/([A-Z])/g, function($1){return '-'+$1.toLowerCase();});
-};
-eeLib.dashesToCamel = function(str) {
+eeLib.dashesToCamel = function(str) { //is this used???
   return str.replace(/(-.)/g, function($1){return $1.charAt(1).toUpperCase();});
 };
 eeLib.formatResults = function(messages) {
@@ -43,7 +40,7 @@ eeLib.delayDisplay = function(messages, $timeout) {
   }.bind(this),250)
 };
 eeLib.getFunctionNames = function(str) {
-  var results = str.split(/[\+\-\/\|\<\>\^=&!%~]/g).map(function(x){
+  var results = str.replace(/\s+/g,'').split(/[\+\-\/\|\<\>\^=&!%~]/g).map(function(x){
     if(isNaN(+x)) {
       if(x.match(/\w+\(.*\)$/)){
         return x.substring(0,x.indexOf('('));
@@ -56,7 +53,7 @@ eeLib.getFunctionNames = function(str) {
 eeLib.getEventAttr = function(attrs) {
   for(var attr in attrs) {
     if(eeLib.ngEventDirectives[attr]) {
-      return eeLib.dashesToCamel(attr);
+      return attr;
     }
   }
 };
