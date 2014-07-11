@@ -1,7 +1,7 @@
 Angular Hint Events
 ==================
 
-Project to identify and alert developer of possibly misspelled directives
+Angular Hint tool for identifing when ngEventDirectives are bound to undefined functions
 
 ## [License](LICENSE)
 
