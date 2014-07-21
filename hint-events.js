@@ -1,4 +1,4 @@
-angular.module('ngHintEvent',[])
+angular.module('ngHintEvents',[])
   .config(['$provide',function($provide){
     var ngEventDirs = eeLib.getEventDirectives();
     for(var directive in ngEventDirs) {
