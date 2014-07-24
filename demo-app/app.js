@@ -1,4 +1,4 @@
-angular.module('demoApp',['ngRoute','ngHintEvent'])
+angular.module('demoApp',['ngRoute','ngHintEvents'])
   .config(['$routeProvider',function($routeProvider){
     $routeProvider.when('/', {
       controller: 'DemoController',
