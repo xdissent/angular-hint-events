@@ -1,7 +1,9 @@
+'use strict';
 var eeLib = {
   ngEventDirectives: {},
   currentPromises: {}
 };
+
 eeLib.getEventDirectives = function() {
   var list = 'click dblclick mousedown mouseup mouseover mouseout mousemove mouseenter mouseleave keydown keyup keypress submit focus blur copy cut paste'.split(' ');
   var eventDirHash = {};
@@ -12,9 +14,11 @@ eeLib.getEventDirectives = function() {
   eeLib.ngEventDirectives = eventDirHash;
   return eventDirHash;
 };
+
 eeLib.dashesToCamel = function(str) { //is this used???
   return str.replace(/(-.)/g, function($1){return $1.charAt(1).toUpperCase();});
 };
+
 eeLib.formatResults = function(messages) {
   messages = eeLib.addSuggestions(messages);
   if(messages.length) {
@@ -33,14 +37,16 @@ eeLib.formatResults = function(messages) {
     console.groupEnd();
   }
 };
+
 eeLib.delayDisplay = function(messages, $timeout) {
   $timeout.cancel(eeLib.currentPromises);
   eeLib.currentPromises = $timeout(function() {
     eeLib.formatResults(messages);
-  }.bind(this),250)
+  }.bind(this),250);
 };
+
 eeLib.getFunctionNames = function(str) {
-  var results = str.replace(/\s+/g,'').split(/[\+\-\/\|\<\>\^=&!%~]/g).map(function(x){
+  var results = str.replace(/\s+/g,'').split(/[\+\-\/\|<\>\^=&!%~]/g).map(function(x){
     if(isNaN(+x)) {
       if(x.match(/\w+\(.*\)$/)){
         return x.substring(0,x.indexOf('('));
@@ -50,6 +56,7 @@ eeLib.getFunctionNames = function(str) {
   }).filter(function(x){return x;});
   return results;
 };
+
 eeLib.getEventAttr = function(attrs) {
   for(var attr in attrs) {
     if(eeLib.ngEventDirectives[attr]) {
@@ -57,14 +64,16 @@ eeLib.getEventAttr = function(attrs) {
     }
   }
 };
+
 eeLib.addSuggestions = function(messages) {
   messages.forEach(function(messageObj) {
     var props = eeLib.getValidProps(messageObj.scope);
     var suggestion = eeLib.getSuggestion(messageObj.boundFunc, props);
-    messageObj['match'] = suggestion;
+    messageObj.match = suggestion;
   });
   return messages;
-}
+};
+
 eeLib.getValidProps = function(obj) {
   var props = [];
   for(var prop in obj) {
@@ -73,30 +82,33 @@ eeLib.getValidProps = function(obj) {
     }
   }
   return props;
-}
+};
+
 eeLib.getSuggestion = function (original, props) {
   var min_levDist = Infinity, closestMatch = '';
   for(var i in props) {
-    prop = props[i];
+    var prop = props[i];
     if(eeLib.areSimilarEnough(original,prop)) {
       var currentlevDist = eeLib.levenshteinDistance(original, prop);
-      var closestMatch = (currentlevDist < min_levDist)? prop : closestMatch;
-      var min_levDist = (currentlevDist < min_levDist)? currentlevDist : min_levDist;
+      closestMatch = (currentlevDist < min_levDist)? prop : closestMatch;
+      min_levDist = (currentlevDist < min_levDist)? currentlevDist : min_levDist;
     }
   }
   return closestMatch;
-}
+};
+
 eeLib.areSimilarEnough = function(s,t) {
-  var strMap = {}, similarities = 0, STRICTNESS = .66;
+  var strMap = {}, similarities = 0, STRICTNESS = 0.66;
   if(Math.abs(s.length-t.length) > 3) {
     return false;
   }
-  s.split('').forEach(function(x){strMap[x] = x});
+  s.split('').forEach(function(x){strMap[x] = x;});
   for (var i = t.length - 1; i >= 0; i--) {
     similarities = strMap[t.charAt(i)] ? similarities + 1 : similarities;
-  };
+  }
   return similarities >= t.length * STRICTNESS;
-}
+};
+
 eeLib.levenshteinDistance = function(s, t) {
     if(typeof s !== 'string' || typeof t !== 'string') {
       throw new Error('Function must be passed two strings, given: '+typeof s+' and '+typeof t+'.');

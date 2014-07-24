@@ -1,3 +1,4 @@
+'use strict';
 angular.module('ngHintEvent',[])
   .config(['$provide',function($provide){
     var ngEventDirs = eeLib.getEventDirectives();
@@ -5,7 +6,7 @@ angular.module('ngHintEvent',[])
       var dirName = ngEventDirs[directive]+'Directive';
       $provide.decorator(dirName, ['$delegate', '$timeout', '$parse',
         function($delegate, $timeout, $parse) {
-          var original = $delegate[0].compile, falseBinds = [], messages = [];
+          var messages = [];
           eeLib.delayDisplay(messages, $timeout);
           $delegate[0].compile = function(element, attrs, transclude) {
             var eventAttrName = eeLib.getEventAttr(attrs.$attr);
