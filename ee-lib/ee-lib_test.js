@@ -6,12 +6,6 @@ describe('eeLib', function() {
       expect(dirs['ngMouseover']).toBe('ngMouseover');
     })
   })
-  describe('dashesToCamel()', function() {
-    it('should return a dash cased string to camel case', function() {
-      var res = eeLib.dashesToCamel('this-is-a-test')
-      expect(res).toBe('thisIsATest');
-    })
-  })
   describe('getFunctionNames()', function() {
     it('should return an array of strings with the function names with in an expression', function() {
       var simple = eeLib.getFunctionNames('simpleTest()');
