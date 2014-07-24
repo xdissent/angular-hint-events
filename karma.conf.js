@@ -17,7 +17,7 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'hint-events.js',
-      '*_test.js'
+      'test/*.js'
     ],
 
 
@@ -30,7 +30,8 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'hint-events.js': ['browserify']
+      'hint-events.js': ['browserify'],
+      'test/*_test.js': ['browserify']
     },
 
 
