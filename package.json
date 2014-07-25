@@ -1,7 +1,7 @@
 {
   "name": "angular-hint-events",
   "version": "0.2.0",
-  "description": "Angular Hint tool for identifing when ngEventDirectives are bound to undefined functions",
+  "description": "An Angular Hint Module for identifying issues related to ngEventDirectives.",
   "main": "hint-events.js",
   "devDependencies": {
     "karma": "^0.12.17",
