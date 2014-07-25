@@ -17,7 +17,8 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'hint-events.js',
-      'test/*.js'
+      'test/*.js',
+      'hint-events_test.js'
     ],
 
 

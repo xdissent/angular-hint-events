@@ -1,35 +1,33 @@
 var hintLog = angular.hint;
 describe('hintEvents', function() {
-  var $rootScope, $compile;
+  var $rootScope, $compile, $controller;
   beforeEach(module('ngHintEvents'));
-  beforeEach(inject(function(_$rootScope_, _$compile_) {
+  beforeEach(inject(function(_$rootScope_, _$compile_, _$controller_) {
       $rootScope = _$rootScope_;
       $compile = _$compile_;
+      $controller = _$controller_;
   }));
 
   it('should log a message if the function to handle an ng-event is not found', function() {
-    var html = "<button id='increment1' ng-click=\"increments()\" ng-src>Fake Increment</button>";
-    var element = angular.element(html);
-    $compile(element)($rootScope);
-    $rootScope.$apply();
-    expect(hintLog.flush().length).toBe(1);
+    var elm = angular.element('<button id="increment1" ng-click="increments()" ng-src>Fake Increment</button>');
+    scope = $rootScope;
+    $compile(elm)(scope);
+    scope.$digest();
+    expect(angular.hint.flush().length).toBe(1);
   });
 
 
   it('should suggest a similar function to the not found ng-event function', function() {
-    angular.module('sampleApp', []).controller('SampleController', ['$scope',
-      function($scope) {
-        $scope.name = 'Angular Hint: Events';
-        $scope.count = 0;
-        $scope.increment = function(){++$scope.count};
-      }]);
+    var scope = $rootScope.$new();
+    var ctrl = $controller(function(){
+      scope.name = 'Angular Hint: Events';
+      scope.count = 0;
+      scope.increment = function(){scope.count};
+    });
 
-    var html = "<button id='increment1' ng-click=\"increments()\" ng-src>Fake Increment</button>";
-    var element = angular.element(html);
-    $compile(element)($rootScope);
+    var elm = angular.element('<button id="increment1" ng-click="increments()" ng-src>Fake Increment</button>');
+    $compile(elm)(scope);
     $rootScope.$digest();
-    expect(hintLog.flush()).toEqual([ 'Function "increments" called on BUTTON element with id: ' +
-      '#increment1 does not exist in that scope. (Try "constructor") Event directive found on ' +
-      '[object HTMLButtonElement] in [object Object] scope.' ]);
+    expect(hintLog.flush()).toEqual([ 'Variable "increments" called on BUTTON element with id: #increment1 does not exist in that scope. (Try "increment") Event directive found on [object HTMLButtonElement] in [object Object] scope.' ]);
   });
 });
