@@ -13,7 +13,7 @@ describe('hintEvents', function() {
     scope = $rootScope;
     $compile(elm)(scope);
     scope.$digest();
-    expect(angular.hint.flush().length).toBe(1);
+    expect(Object.keys(hintLog.flush()['Events']).length).toBe(1);
   });
 
 
@@ -28,6 +28,6 @@ describe('hintEvents', function() {
     var elm = angular.element('<button id="increment1" ng-click="increments()" ng-src>Fake Increment</button>');
     $compile(elm)(scope);
     $rootScope.$digest();
-    expect(hintLog.flush()).toEqual([ 'Variable "increments" called on BUTTON element with id: #increment1 does not exist in that scope. (Try "increment") Event directive found on [object HTMLButtonElement] in [object Object] scope.' ]);
+    expect(Object.keys(hintLog.flush()['Events'])).toEqual([ ' Variable "increments" called on BUTTON element with id: #increment1 does not exist in that scope. (Try "increment") Event directive found on [object HTMLButtonElement] in [object Object] scope.' ]);
   });
 });
