@@ -1,31 +1,35 @@
 'use strict';
 
-var hintLog = angular.hint = require('angular-hint-log');
-var ngEventDirectives = require('./lib/getEventDirectives')();
+/**
+* Load necessary functions from /lib into variables.
+*/
+var ngEventDirectives = require('./lib/getEventDirectives')(),
+  getEventAttribute = require('./lib/getEventAttribute'),
+  getFunctionNames = require('./lib/getFunctionNames'),
+  formatResults = require('./lib/formatResults');
 
-var getEventAttribute = require('./lib/getEventAttribute');
-var getFunctionNames = require('./lib/getFunctionNames');
-var formatResults = require('./lib/formatResults');
-
-angular.module('ngHintEvents',[])
-  .config(['$provide',function($provide) {
+/**
+* Decorate $provide in order to examine ng-event directives
+* and hint about their effective use.
+*/
+angular.module('ngHintEvents', [])
+  .config(['$provide', function($provide) {
 
     for(var directive in ngEventDirectives) {
-
-      var dirName = ngEventDirectives[directive]+'Directive';
+      var dirName = ngEventDirectives[directive] + 'Directive';
 
       $provide.decorator(dirName, ['$delegate', '$timeout', '$parse',
         function($delegate, $timeout, $parse) {
+          $delegate[0].compile = function(element, attrs) {
+            var eventAttrName = getEventAttribute(attrs.$attr),
+              fn = $parse(attrs[eventAttrName]),
+              messages = [];
 
-          var original = $delegate[0].compile, falseBinds = [], messages = [];
-
-          $delegate[0].compile = function(element, attrs, transclude) {
-            var eventAttrName = getEventAttribute(attrs.$attr);
-            var fn = $parse(attrs[eventAttrName]);
-            var messages = [];
             return function ngEventHandler(scope, element, attrs) {
               for(var attr in attrs.$attr) {
                 var boundFuncs = getFunctionNames(attrs[attr]);
+
+                //For the event functions that are bound, find if they exist on the scope
                 boundFuncs.forEach(function(boundFn) {
                   if(ngEventDirectives[attr] && !(boundFn in scope)) {
                     messages.push({
@@ -37,15 +41,19 @@ angular.module('ngHintEvents',[])
                   }
                 });
               }
+
               element.on(eventAttrName.substring(2).toLowerCase(), function(event) {
                 scope.$apply(function() {
-                  fn(scope, {$event:event});
+                  fn(scope, {$event: event});
                 });
               });
+
+              //Hint about any mistakes found
               formatResults(messages);
             };
           };
           return $delegate;
-      }]);
+        }
+      ]);
     }
   }]);
