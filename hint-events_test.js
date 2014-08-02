@@ -29,9 +29,7 @@ describe('hintEvents', function() {
     $compile(elm)(scope);
     $rootScope.$digest();
     var log = hintLog.flush();
-    expect(log['Events']['Error Messages']).toEqual(['Variable "increments" called on BUTTON ' +
-      'element with id: #increment1 does not exist in that scope (Try "increment"). Event' +
-      ' directive found on "<button id="increment1" ng-click="increments()" ng-src="" ' +
-      'class="ng-scope">Fake Increment</button>".']);
+    expect(log['Events']['Error Messages'][0]).toContain('Variable "increments" called on BUTTON ' +
+      'element with id: #increment1 does not exist in that scope (Try "increment").');
   });
 });
