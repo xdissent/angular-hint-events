@@ -34,5 +34,9 @@ describe('getEventDirectives()', function() {
     angular.version.minor = 1;
     angular.version.dot = 3;
     expect(dirs['ngPaste']).toBeDefined();
+
+    angular.version.minor = 3;
+    angular.version.dot = 2;
+    expect(dirs['ngPaste']).toBeDefined();
   });
 });
