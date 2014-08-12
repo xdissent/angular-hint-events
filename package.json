@@ -1,6 +1,6 @@
 {
   "name": "angular-hint-events",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "An Angular Hint Module for identifying issues related to ngEventDirectives.",
   "main": "hint-events.js",
   "devDependencies": {
