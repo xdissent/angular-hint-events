@@ -16,44 +16,41 @@ angular.module('ngHintEvents', [])
   .config(['$provide', function($provide) {
 
     for(var directive in ngEventDirectives) {
-      var dirName = ngEventDirectives[directive] + 'Directive';
+      var dirName = ngEventDirectives[directive]+'Directive';
+      try{
+        $provide.decorator(dirName, ['$delegate', '$timeout', '$parse',
+          function($delegate, $timeout, $parse) {
 
-      $provide.decorator(dirName, ['$delegate', '$timeout', '$parse',
-        function($delegate, $timeout, $parse) {
-          $delegate[0].compile = function(element, attrs) {
-            var eventAttrName = getEventAttribute(attrs.$attr),
-              fn = $parse(attrs[eventAttrName]),
-              messages = [];
+            var original = $delegate[0].compile, falseBinds = [], messages = [];
 
-            return function ngEventHandler(scope, element, attrs) {
-              for(var attr in attrs.$attr) {
-                var boundFuncs = getFunctionNames(attrs[attr]);
-
-                //For the event functions that are bound, find if they exist on the scope
-                boundFuncs.forEach(function(boundFn) {
-                  if(ngEventDirectives[attr] && !(boundFn in scope)) {
-                    messages.push({
-                      scope: scope,
-                      element:element,
-                      attrs: attrs,
-                      boundFunc: boundFn
-                    });
-                  }
+            $delegate[0].compile = function(element, attrs, transclude) {
+              var eventAttrName = getEventAttribute(attrs.$attr);
+              var fn = $parse(attrs[eventAttrName]);
+              var messages = [];
+              return function ngEventHandler(scope, element, attrs) {
+                for(var attr in attrs.$attr) {
+                  var boundFuncs = getFunctionNames(attrs[attr]);
+                  boundFuncs.forEach(function(boundFn) {
+                    if(ngEventDirectives[attr] && !(boundFn in scope)) {
+                      messages.push({
+                        scope: scope,
+                        element:element,
+                        attrs: attrs,
+                        boundFunc: boundFn
+                      });
+                    }
+                  });
+                }
+                element.on(eventAttrName.substring(2).toLowerCase(), function(event) {
+                  scope.$apply(function() {
+                    fn(scope, {$event:event});
+                  });
                 });
-              }
-
-              element.on(eventAttrName.substring(2).toLowerCase(), function(event) {
-                scope.$apply(function() {
-                  fn(scope, {$event: event});
-                });
-              });
-
-              //Hint about any mistakes found
-              formatResults(messages);
+                formatResults(messages);
+              };
             };
-          };
-          return $delegate;
-        }
-      ]);
+            return $delegate;
+        }]);
+      } catch(e) {}
     }
   }]);

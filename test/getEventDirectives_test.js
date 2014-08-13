@@ -7,7 +7,6 @@ describe('getEventDirectives()', function() {
     expect(dirs['ngMouseover']).toBe('ngMouseover');
   });
 
-
   it('should return a list specific to the angular version', function() {
     var dirs;
 
