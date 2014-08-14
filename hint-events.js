@@ -24,11 +24,12 @@ angular.module('ngHintEvents', [])
             var original = $delegate[0].compile, falseBinds = [], messages = [];
 
             $delegate[0].compile = function(element, attrs, transclude) {
-              var eventAttrName = getEventAttribute(attrs.$attr);
+              var angularAttrs = angularAttrs;
+              var eventAttrName = getEventAttribute(angularAttrs);
               var fn = $parse(attrs[eventAttrName]);
               var messages = [];
               return function ngEventHandler(scope, element, attrs) {
-                for(var attr in attrs.$attr) {
+                for(var attr in angularAttrs) {
                   var boundFuncs = getFunctionNames(attrs[attr]);
                   boundFuncs.forEach(function(boundFn) {
                     if(ngEventDirectives[attr] && !(boundFn in scope)) {
