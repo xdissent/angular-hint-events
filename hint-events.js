@@ -24,7 +24,7 @@ angular.module('ngHintEvents', [])
             var original = $delegate[0].compile, falseBinds = [], messages = [];
 
             $delegate[0].compile = function(element, attrs, transclude) {
-              var angularAttrs = angularAttrs;
+              var angularAttrs = attrs.$attr;
               var eventAttrName = getEventAttribute(angularAttrs);
               var fn = $parse(attrs[eventAttrName]);
               var messages = [];
