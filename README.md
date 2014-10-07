@@ -15,7 +15,7 @@ enable AngularHintEvents. Further installation information is available on the
 ##Features
 
 ####[Identifying Undefined Variables](identifying-undefined-variables)
-AngularHintEvents checks all ngEventDirectives `ngClick`, `ngMousedown`, `ngFocus`, etc. and their attributes for defined functions and variables on the appropriate `$scope`. If a function or variable is found to be `undefined`, AngularHintEvents will notify you and suggest the closest match if one exsists. In the first example below, you would be warned that the function `increments` doesn't exist for its scope and that you should try `increment`.
+AngularHintEvents checks all ngEventDirectives `ngClick`, `ngMousedown`, `ngFocus`, etc. and their attributes for defined functions and variables on the appropriate `$scope`. If a function or variable is found to be `undefined`, AngularHintEvents will notify you and suggest the closest match if one exists. In the first example below, you would be warned that the function `increments` doesn't exist for its scope and that you should try `increment`.
 
 More complicated expressions will also be checked for values found to be `undefined`. The second example would cause a warning saying that `divideVal` and `divide` are not defined.
 
