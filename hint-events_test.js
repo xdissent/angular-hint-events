@@ -29,7 +29,7 @@ describe('hintEvents', function() {
     $compile(elm)(scope);
     $rootScope.$digest();
     var log = hintLog.flush();
-    expect(log['Events']['Error Messages'][0]).toContain('Variable "increments" called on BUTTON ' +
+    expect(log['Events'].error[0]).toContain('Variable "increments" called on BUTTON ' +
       'element with id: #increment1 does not exist in that scope (Try "increment").');
   });
 });
