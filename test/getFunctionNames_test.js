@@ -13,5 +13,11 @@ describe('getFunctionNames()', function() {
 
     var paramFn = getFunctionNames('one("test") / two([1,3,4])/three()');
     expect(paramFn).toEqual(['one','two','three']);
+
+    var method = getFunctionNames('ctrl.test()');
+    expect(method).toEqual(['ctrl.test']);
+
+    var deepMethods = getFunctionNames('ctrl.deep.test()');
+    expect(deepMethods).toEqual(['ctrl.deep.test']);
   });
 });

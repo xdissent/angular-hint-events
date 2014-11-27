@@ -32,7 +32,13 @@ angular.module('ngHintEvents', [])
                 for(var attr in angularAttrs) {
                   var boundFuncs = getFunctionNames(attrs[attr]);
                   boundFuncs.forEach(function(boundFn) {
-                    if(ngEventDirectives[attr] && !(boundFn in scope)) {
+                    var obj = scope;
+                    var props = boundFn.split('.');
+                    var prop = props.pop();
+                    props.forEach(function (prop) {
+                      obj = (typeof obj === 'object') && obj && obj[prop];
+                    });
+                    if(ngEventDirectives[attr] && (!obj || !(prop in obj))) {
                       messages.push({
                         scope: scope,
                         element:element,
